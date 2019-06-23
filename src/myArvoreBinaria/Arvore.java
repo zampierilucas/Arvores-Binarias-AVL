@@ -8,47 +8,57 @@ public class Arvore {
     // Verificacao de balancemento 
     // https://www.youtube.com/watch?v=Au-6c55J90c
 
-    insere(1);
-    insere(2);
-    insere(3);
-    insere(10);
-    insere(4);
-    insere(5);
-    insere(9);
-    insere(7);
-    insere(8);
-    insere(6);
+    //convertTextToNodes("hello world");
     
+    convertTextToNodes(
+        "Do not go gentle into that good night,\r\n" + 
+        "Old age should burn and rave at close of day;\r\n" + 
+        "Rage, rage against the dying of the light.\r\n" + 
+        "\r\n" + 
+        "Though wise men at their end know dark is right,\r\n" + 
+        "Because their words had forked no lightning they\r\n" + 
+        "Do not go gentle into that good night.\r\n" + 
+        "\r\n" + 
+        "Good men, the last wave by, crying how bright\r\n" + 
+        "Their frail deeds might have danced in a green bay,\r\n" + 
+        "Rage, rage against the dying of the light.\r\n" + 
+        "\r\n" + 
+        "Wild men who caught and sang the sun in flight,\r\n" + 
+        "And learn, too late, they grieved it on its way,\r\n" + 
+        "Do not go gentle into that good night.\r\n" + 
+        "\r\n" + 
+        "Grave men, near death, who see with blinding sight\r\n" + 
+        "Blind eyes could blaze like meteors and be gay,\r\n" + 
+        "Rage, rage against the dying of the light.\r\n" + 
+        "\r\n" + 
+        "And you, my father, there on the sad height,\r\n" + 
+        "Curse, bless, me now with your fierce tears, I pray.\r\n" + 
+        "Do not go gentle into that good night.\r\n" + 
+        "Rage, rage against the dying of the light.");
     
-    print("Resultados Desbalanceados:\n");
-    print("Lista Ordenada:\n");
-    imprime_Ordenado(raiz);
-
-    print("\nLista Pre-Ordenada:\n");
-    imprime_PreOrdenado(raiz);
-
-    print("\nLista Pos-Ordenada:\n");
-    imprime_PosOrdenado(raiz);
+    print("Resultados Desbalanceados:");
+    printArvoreOrdenada();
     
+    print("\n\nResultados Balanceados: ");
     verificarBalanceamento(raiz);
-    
-    print("\n\nResultados Balanceados");
-    print("\nLista Ordenada:\n");
-    imprime_Ordenado(raiz);
-
-    print("\nLista Pre-Ordenada:\n");
-    imprime_PreOrdenado(raiz);
-
-    print("\nLista Pos-Ordenada:\n");
-    imprime_PosOrdenado(raiz);
+    printArvoreOrdenada();
     
   }
-  
+  private static void convertTextToNodes(String txt) {
+    String[] txtArray =  txt.toUpperCase().split("[-., \\n\\r\\s]+");
+     
+    for (String txtNode : txtArray)  
+    {
+      insere(txtNode);
+    }
+  }
 
   //-------------------------------------------------------------------------//
   //                    METODOS DE BALANCEMENTO                              //
   //-------------------------------------------------------------------------//
   
+
+
   // Verifica balancemento da arvore
   private static void verificarBalanceamento(NodoDado no) {
     
@@ -187,13 +197,27 @@ public class Arvore {
   //                    METODOS DE IMPRESSAO                                 //
   //-------------------------------------------------------------------------//
   
+  // Print all
+  static void printArvoreOrdenada() {
+    print("\nLista Ordenada:(no[balanceamento][quantidade])\n");
+    imprime_Ordenado(raiz);
+    
+    /*
+    print("\nLista Pre-Ordenada:\n");
+    imprime_PreOrdenado(raiz);
+
+    print("\nLista Pos-Ordenada:\n");
+    imprime_PosOrdenado(raiz);
+    */
+  }
+  
   // Ordenado
   private static void imprime_Ordenado(NodoDado no) {
     if(no == null)
       return;
     
     imprime_Ordenado(no.getEsq());
-    print(" | " + no.getDado()+"["+no.getBalanceamento()+"]");
+    print(" | " + no.getDado() + "["+ no.getBalanceamento() + "][" + no.getQuantNodo() + "]");
     imprime_Ordenado(no.getDir());
   }
   
@@ -222,7 +246,8 @@ public class Arvore {
   //                    METODOS DE INSERCAO                                  //
   //-------------------------------------------------------------------------//
   public static void insereAVL(NodoDado aComparar, NodoDado aInserir) {
-        
+    int ALFABETICAMENTE_MENOR = -1;    
+    int ALFABETICAMENTE_MAIOR = 1;
     // defina uma raiz
     if(raiz == null)
        raiz = aInserir;
@@ -230,7 +255,7 @@ public class Arvore {
     // Se raiz ja foi definido
     else {
       // Verifica se o novo nodo é menor q o atual
-      if(aInserir.getDado() < aComparar.getDado()) {
+      if(aInserir.getDado().compareToIgnoreCase(aComparar.getDado()) <= ALFABETICAMENTE_MENOR) {
         if(aComparar.getEsq() == null) {
           aComparar.setEsq(aInserir);
           aInserir.setPai(aComparar);
@@ -240,7 +265,7 @@ public class Arvore {
           insereAVL(aComparar.getEsq(),aInserir);
       }
       // Verifica se o novo nodo é maior q o atual
-      else if(aInserir.getDado() > aComparar.getDado()){
+      else if(aInserir.getDado().compareToIgnoreCase(aComparar.getDado()) >= ALFABETICAMENTE_MAIOR){
         if(aComparar.getDir() == null) {
           aComparar.setDir(aInserir);
           aInserir.setPai(aComparar);
@@ -256,8 +281,8 @@ public class Arvore {
     }
   }
   
-  public static void insere(int i) {
-    insereAVL(raiz,new NodoDado(i));
+  public static void insere(String txt) {
+    insereAVL(raiz,new NodoDado(txt));
   }
   
   //-------------------------------------------------------------------------//

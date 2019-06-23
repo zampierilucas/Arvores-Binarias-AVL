@@ -1,26 +1,26 @@
 package myArvoreBinaria;
 
 public class NodoDado {
-  int quantNodo;
-  int dado;
-  int balanceamento;
 
+  String dado;
+  int quantNodo;
+  int balanceamento;
   NodoDado esq;
   NodoDado dir;
   NodoDado pai;
   
-  public NodoDado(int info) {
+  public NodoDado(String info) {
     this.dado = info;
     this.esq = null;
     this.dir = null;
     this.quantNodo = 1; 
   }
   
-  public int getDado() {
+  public String getDado() {
     return dado;
   }
   
-  public void setDado(int dado) {
+  public void setDado(String dado) {
     this.dado = dado;
   }
   
