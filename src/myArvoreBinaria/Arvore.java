@@ -1,6 +1,7 @@
 package myArvoreBinaria;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Scanner;
 
 public class Arvore {
@@ -13,7 +14,7 @@ public class Arvore {
   static ArrayList<String> arrTextos = new ArrayList<String>();
   static String textoSelecionado;
   static int textoSelecionadoIndex;
-  static int nPalavras = 0;
+  static int nPalavras = 1;
   static int nPalavrasTotal;
   static boolean achou = false;
   
@@ -49,7 +50,7 @@ public class Arvore {
   private static void menu() {
    
    boolean continuar = true;
-   menu handler = menu.MENU;
+   menu handler = menu.GERAL_INSERIR_TEXTO;
 
    while(continuar)
    {
@@ -81,7 +82,7 @@ public class Arvore {
        case GERAL_INSERIR_TEXTO:
          inserir_texto();
          
-         handler = menu.MENU;
+         handler = menu.GERAL_SELECIONAR_TEXTO;
          break;
        case GERAL_SELECIONAR_TEXTO:
          selecionar_texto();
@@ -106,7 +107,8 @@ public class Arvore {
          handler = menu.MENU;
          break;
        case UNICO_IMPRIME_AZ:
-         //TODO
+    	 Impirme_OrdemAZ();
+         
          handler = menu.MENU;
          break;
        case UNICO_IMPRIME_PREFIXADA:
@@ -142,7 +144,8 @@ public class Arvore {
   }
 
 
-  //-------------------------------------------------------------------------//
+
+//-------------------------------------------------------------------------//
   //                      METODOS DE PESQUISA                                //
   //-------------------------------------------------------------------------//
   
@@ -215,7 +218,7 @@ public class Arvore {
     
     // Reseta Arvore
     raiz = null;
-    nPalavras = 0;
+    nPalavras = 1;
     
     convertTextToNodes(arrTextos.get(Selecionado));
   }
@@ -359,6 +362,26 @@ public class Arvore {
   //                    METODOS DE IMPRESSAO                                 //
   //-------------------------------------------------------------------------//
   
+
+
+  private static void Impirme_OrdemAZ() {
+	  parseTreeIndex = 0;
+	  String[] BinaryTreeArray =  new String[nPalavras];
+	  
+	  parseTree_PosOrdenado(raiz,BinaryTreeArray);
+	  
+	  ArrayList<String> BinaryTreeArrayList = new ArrayList<String>(); 
+	  
+	  for(String n : BinaryTreeArray)
+		  BinaryTreeArrayList.add(n);
+
+	  Collections.sort(BinaryTreeArrayList);
+
+	  print("\n["+ (textoSelecionado == null ? "NONE" : textoSelecionado) +"]\n");
+	  for(String n : BinaryTreeArrayList)
+		  print(n + "\n");
+  }
+  
   // Print all
   static void printArvoreOrdenada() {
     print("\nLista Ordenada:(no[balanceamento][quantidade])\n");
@@ -372,6 +395,18 @@ public class Arvore {
     imprime_PosOrdenado(raiz);
     */
   }
+  // Print tree With return
+  static int parseTreeIndex = 0;
+  
+  private static void parseTree_PosOrdenado(NodoDado no, String[] binaryTreeArray) {
+	    if(no == null)
+	      return;
+	    
+	    parseTree_PosOrdenado(no.getEsq(), binaryTreeArray);
+	    parseTree_PosOrdenado(no.getDir(), binaryTreeArray);
+	    
+	    binaryTreeArray[parseTreeIndex++] = no.getDado() + " ["+ no.getBalanceamento() + "][" + no.getQuantNodo() + "]";
+	  }
   
   // Ordenado
   private static void imprime_Ordenado(NodoDado no) {
@@ -432,12 +467,11 @@ public class Arvore {
 
   
   private static void convertTextToNodes(String txt) {
-    String[] txtArray = txt.toUpperCase().split("[-., \\n\\r\\s]+");
+    String[] txtArray = txt.toUpperCase().split("[-.,? \\n\\r\\s]+");
      
     for (String txtNode : txtArray)  
     {
       insere(txtNode);
-      nPalavras++;
     }
    
     nPalavrasTotal += nPalavras;
@@ -458,6 +492,7 @@ public class Arvore {
         if(aComparar.getEsq() == null) {
           aComparar.setEsq(aInserir);
           aInserir.setPai(aComparar);
+          nPalavras++;
           verificarBalanceamento(aComparar);
         }
         else 
@@ -468,6 +503,7 @@ public class Arvore {
         if(aComparar.getDir() == null) {
           aComparar.setDir(aInserir);
           aInserir.setPai(aComparar);
+          nPalavras++;
           verificarBalanceamento(aComparar);
         }
         else
