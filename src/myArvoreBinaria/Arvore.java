@@ -21,10 +21,6 @@ public class Arvore {
   public static void main(String[] args) {
 
     menu();
-
-    print("\n\nResultados Balanceados: ");
-    printArvoreOrdenada();
-    
   }
   //-------------------------------------------------------------------------//
   //                              MENU                                       //
@@ -107,12 +103,12 @@ public class Arvore {
          handler = menu.MENU;
          break;
        case UNICO_IMPRIME_AZ:
-    	 Impirme_OrdemAZ();
+    	 Unico_Imprime_OrdemAZ();
          
          handler = menu.MENU;
          break;
        case UNICO_IMPRIME_PREFIXADA:
-         imprime_PreOrdenado(raiz);
+         Unico_imprime_PreOrdenado(raiz);
          
          handler = menu.MENU;
          break;
@@ -122,7 +118,8 @@ public class Arvore {
          handler = menu.MENU;
          break;
        case TODOS_IMPRIME_AZ:
-       //TODO
+         Todos_Imprime_OrdemAZ();
+         
          handler = menu.MENU;
          break;
        case TODOS_CONTA_N_PALAVRAS:
@@ -131,7 +128,7 @@ public class Arvore {
          handler = menu.MENU;
          break;
        case TODOS_IMPRIME_PREFIXADO:
-         //TODO
+         todos_Imprime_PreOrdenado();
          
          handler = menu.MENU;
          break;
@@ -144,8 +141,7 @@ public class Arvore {
   }
 
 
-
-//-------------------------------------------------------------------------//
+  //-------------------------------------------------------------------------//
   //                      METODOS DE PESQUISA                                //
   //-------------------------------------------------------------------------//
   
@@ -215,11 +211,7 @@ public class Arvore {
     
     textoSelecionado = arrTextos.get(Selecionado).replace("\r","").replace("\n","").substring(0,Math.min(20,arrTextos.get(Selecionado).length()));
     textoSelecionadoIndex = Selecionado;
-    
-    // Reseta Arvore
-    raiz = null;
-    nPalavras = 1;
-    
+        
     convertTextToNodes(arrTextos.get(Selecionado));
   }
 
@@ -362,10 +354,21 @@ public class Arvore {
   //                    METODOS DE IMPRESSAO                                 //
   //-------------------------------------------------------------------------//
   
+  
+  
+  private static void Todos_Imprime_OrdemAZ() {
+    for(int j=0;j<arrTextos.size();j++) {
+      
+      convertTextToNodes(arrTextos.get(j));
 
+      Unico_Imprime_OrdemAZ();
+    }
+    
+  }
 
-  private static void Impirme_OrdemAZ() {
+  private static void Unico_Imprime_OrdemAZ() {
 	  parseTreeIndex = 0;
+	  
 	  String[] BinaryTreeArray =  new String[nPalavras];
 	  
 	  parseTree_PosOrdenado(raiz,BinaryTreeArray);
@@ -383,18 +386,7 @@ public class Arvore {
   }
   
   // Print all
-  static void printArvoreOrdenada() {
-    print("\nLista Ordenada:(no[balanceamento][quantidade])\n");
-    imprime_Ordenado(raiz);
-    
-    /*
-    print("\nLista Pre-Ordenada:\n");
-    imprime_PreOrdenado(raiz);
 
-    print("\nLista Pos-Ordenada:\n");
-    imprime_PosOrdenado(raiz);
-    */
-  }
   // Print tree With return
   static int parseTreeIndex = 0;
   
@@ -408,24 +400,30 @@ public class Arvore {
 	    binaryTreeArray[parseTreeIndex++] = no.getDado() + " ["+ no.getBalanceamento() + "][" + no.getQuantNodo() + "]";
 	  }
   
-  // Ordenado
-  private static void imprime_Ordenado(NodoDado no) {
-    if(no == null)
-      return;
+  // Todos Pre-Ordenado
+  private static void todos_Imprime_PreOrdenado() {
+    for(int j=0;j<arrTextos.size();j++) {
+      
+      convertTextToNodes(arrTextos.get(j));
+
+      textoSelecionado = arrTextos.get(j).replace("\r","").replace("\n","").substring(0,Math.min(20,arrTextos.get(j).length()));
+      print("[" + textoSelecionado + "]\n");
+      Unico_imprime_PreOrdenado(raiz);
+      
+      print("\n\n");
+      
+    }
     
-    imprime_Ordenado(no.getEsq());
-    print(" | " + no.getDado() + "["+ no.getBalanceamento() + "][" + no.getQuantNodo() + "]");
-    imprime_Ordenado(no.getDir());
   }
   
-  // Pre-Ordenado
-  private static void imprime_PreOrdenado(NodoDado no) {
+  // Unico Pre-Ordenado
+  private static void Unico_imprime_PreOrdenado(NodoDado no) {
     if(no == null)
       return;
     
     print(" | " + no.getDado()+"["+no.getBalanceamento()+"]");
-    imprime_PreOrdenado(no.getEsq());
-    imprime_PreOrdenado(no.getDir());   
+    Unico_imprime_PreOrdenado(no.getEsq());
+    Unico_imprime_PreOrdenado(no.getDir());   
   }
 
   
@@ -467,6 +465,9 @@ public class Arvore {
 
   
   private static void convertTextToNodes(String txt) {
+    raiz = null;
+    nPalavras = 1;
+    
     String[] txtArray = txt.toUpperCase().split("[-.,? \\n\\r\\s]+");
      
     for (String txtNode : txtArray)  
